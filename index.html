@@ -1,0 +1,97 @@
+<html>
+    <body>
+        <!--<script type="text/javascript" src="./web3.min.js"></script>-->
+        <script type="text/javascript" src="./dist/ethers-web3.js"></script>
+        <script type="text/javascript">
+            //var web3 = new Web3(new ethers.EthersProvider(true));
+            var web3 = ethers.connect(true);
+
+            var calls = [
+//                ['defaultAccount', false, []],
+                ['syncing', false, []],
+                ['getSyncing', true, []],
+                ['coinbase', false, []],
+                ['getCoinbase', true, []],
+                ['hashrate', false, []],
+                ['getHashrate', true, []],
+                ['gasPrice', false, []],
+                ['getGasPrice', true, []],
+                ['accounts', false, []],
+                ['getAccounts', true, []],
+                ['mining', false, []],
+                ['getMining', true, []],
+                ['blockNumber', false, []],
+                ['getBlockNumber', true, []],
+                ['getBalance', true, ['0x017680e5d790bfc6fb8a35c6894ea998ac422a26', 'latest']],
+//                ['getStorageAt', true, []],
+                ['getCode', true, ['0x2eef6b9e04b45aaddd73453104184a5fa3fad7d6']],
+                ['getBlock', true, [42]],
+                ['getBlock', true, ['0x9e92b0892677962903bc8d48cf9b5400e4f50d05793208fc29918ee202f09d35']],
+                ['getBlockTransactionCount', true, [42]],
+                ['getBlockTransactionCount', true, ['0x9e92b0892677962903bc8d48cf9b5400e4f50d05793208fc29918ee202f09d35']],
+                ['getUncle', true, [867889]],
+                ['getUncle', true, ['0xbbd9606f3f9ec669a149ff5e61a307a91621d303551f6f05bcaea7328f3125f1']],
+                ['getBlockUncleCount', true, [867889]],
+                ['getBlockUncleCount', true, ['0xbbd9606f3f9ec669a149ff5e61a307a91621d303551f6f05bcaea7328f3125f1']],
+                ['getTransaction', true, ['0x3ae14ac5d4e532a9fbe08edd01838c6ac60c55037da330535419d726bfb2e111']],
+                ['getTransactionFromBlock', true, [846181, 1]],
+                ['getTransactionFromBlock', true, ['0x030a52895e562317bce253803cefe7449d5d94b37f900ff82d9a5d354024089b', 1]],
+                ['getTransactionReceipt', true, ['0x3ae14ac5d4e532a9fbe08edd01838c6ac60c55037da330535419d726bfb2e111']],
+                ['getTransactionCount', true, ['0x017680e5d790bfc6fb8a35c6894ea998ac422a26']],
+                ['sendTransaction', true, [{from: '0x017680e5d790bfc6fb8a35c6894ea998ac422a26', data: '0x00'}]],
+//                ['sendRawTransaction', true, []],
+                ['sign', true, ['0x017680e5d790bfc6fb8a35c6894ea998ac422a26', '0x00']],
+//                ['call', true, []],
+//                ['estimateGas', true, []],
+            ];
+            for (var i = 0; i < calls.length; i++) {
+                var funcName = calls[i][0];
+                var async = calls[i][1], params = calls[i][2];
+                if (async) {
+                    (function(funcName, params) {
+                        params.push(function(error, result) {
+                            if (error) {
+                                console.log('ERROR', funcName, error);
+                            } else {
+                                console.log('OK', funcName, result);
+                            }
+                        });
+
+                        try {
+                            web3.eth[funcName].apply(web3, params);
+                        } catch (error) {
+                            console.log('FATAL', funcName, error);
+                        }
+                    })(funcName, params);
+
+                } else {
+                    try {
+                        var value = web3.eth[funcName]
+                        console.log('OK', funcName, value);
+                    } catch (error) {
+                        console.log('ERROR', funcName, error);
+                    }
+                }
+            }
+
+            /*
+
+            web3.eth.getBalance('0x017680e5d790bfc6fb8a35c6894ea998ac422a26', function (error, balance) {
+                if (error) {
+                    console.log('error', error);
+                } else {
+                    console.log('getBalance', web3.fromWei(balance).toString(10));
+                }
+            });
+
+            web3.eth.getBlockNumber(function (error, blockNumber) {
+                if (error) {
+                    console.log('error', error);
+                } else {
+                    console.log('getBlockNumber', blockNumber);
+                }
+            });
+            */
+        </script>
+    </body>
+</html>
