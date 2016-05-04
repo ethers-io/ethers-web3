@@ -17,7 +17,7 @@ y=m.length;if(w>y&&m.unshift(0),r(_,m,w,u),w=_.length,-1==f)for(;n(D,_,F,w)<1;)d
 
         // @TODO: Add redundant hosts
         if (testnet) {
-            this._endpoint = 'wss://testnet-virginia-1.ethers.ws/v1/morden';
+            this._endpoint = 'wss://morden-virginia-1.ethers.ws/v1/morden';
         } else {
             this._endpoint = 'wss://homestead-virginia-1.ethers.ws/v1/homestead';
         }

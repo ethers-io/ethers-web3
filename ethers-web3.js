@@ -14,7 +14,7 @@ var ethers = (function() {
 
         // @TODO: Add redundant hosts
         if (testnet) {
-            this._endpoint = 'wss://testnet-virginia-1.ethers.ws/v1/morden';
+            this._endpoint = 'wss://morden-virginia-1.ethers.ws/v1/morden';
         } else {
             this._endpoint = 'wss://homestead-virginia-1.ethers.ws/v1/homestead';
         }
