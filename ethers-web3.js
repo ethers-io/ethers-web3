@@ -2,7 +2,7 @@ var ethers = (function() {
     // If you don't wish to inject web3 here, simply include it with a <script> tag
 
     // Begin Web3
-    // REPALCE WITH WEB3
+    // REPLACE-WITH-WEB3
     // End Web3
 
     var Web3 = require('web3');
@@ -14,11 +14,17 @@ var ethers = (function() {
 
         // @TODO: Add redundant hosts
         if (testnet) {
-            this._endpoint = 'wss://morden-virginia-1.ethers.ws/v1/morden';
+            this._endpoints = [
+                'wss://morden-virginia-1.ethers.ws/v1/morden',
+                'wss://morden-virginia-2.ethers.ws/v1/morden',
+            ];
         } else {
-            this._endpoint = 'wss://homestead-virginia-1.ethers.ws/v1/homestead';
+            this._endpoints = [
+                'wss://homestead-virginia-1.ethers.ws/v1/homestead',
+            ];
         }
 
+        // Debug against your own local ethers-server
         //this._endpoint = 'ws://localhost:8001/v1/morden';
 
         // Backlog of sends requested while we were not conneted
@@ -39,7 +45,8 @@ var ethers = (function() {
     }
 
     EthersProvider.prototype._connect = function() {
-        this._ws = new WebSocket(this._endpoint);
+        // Connect to a random endpoint
+        this._ws = new WebSocket(this._endpoints[parseInt(Math.random() * this._endpoints.length)]);
 
         var self = this;
         this._ws.onopen = function() {
