@@ -25,7 +25,7 @@ var ethers = (function() {
         }
 
         // Debug against your own local ethers-server
-        //this._endpoint = 'ws://localhost:8001/v1/morden';
+        //this._endpoints = ['ws://localhost:8001/v1/morden'];
 
         // Backlog of sends requested while we were not conneted
         this._pending = [];
