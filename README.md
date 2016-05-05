@@ -28,13 +28,14 @@ To Do
 
 * Automatically reconnect
 * Filters
-* Inject private keys and addresses into the ethers object as accounts
+* Inject private keys and addresses into the `ethers` object as accounts
+* Re-write the parts of *web3* that *ethers-web3* requires to remove the LGPL tendrils
 
 
 API
 ---
 
-The `ethers` object handles connecting to a Ethereum node for you, over an efficient WebSocket.
+The `ethers` object handles connecting to a *Ethereum* node for you, over an efficient WebSocket.
 
 ```javascript
     // Connect to mainnet (homestead)
