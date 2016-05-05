@@ -11,30 +11,25 @@ y=m.length;if(w>y&&m.unshift(0),r(_,m,w,u),w=_.length,-1==f)for(;n(D,_,F,w)<1;)d
 
     var Web3 = require('web3');
 
-    function EthersProvider(options) {
-        if (!options) { options = {}; }
-
+    function EthersProvider(testnet) {
         this._nextMessageId = 1;
         this._callbacks = {};
         this._ws = null;
 
-        // Custom endpoints
-        if (options.endpoints) {
-            this._endpoints = options.endpoints;
-
-        // Testnet
-        } else if (options.testnet) {
+        // @TODO: Add redundant hosts
+        if (testnet) {
             this._endpoints = [
-               'wss://morden-virginia-1.ethers.ws/v1/morden',
-               'wss://morden-virginia-2.ethers.ws/v1/morden',
+                'wss://morden-virginia-1.ethers.ws/v1/morden',
+                'wss://morden-virginia-2.ethers.ws/v1/morden',
             ];
-
-        // Homestead
         } else {
             this._endpoints = [
                 'wss://homestead-virginia-1.ethers.ws/v1/homestead',
             ];
         }
+
+        // Debug against your own local ethers-server
+        //this._endpoint = 'ws://localhost:8001/v1/morden';
 
         // Backlog of sends requested while we were not conneted
         this._pending = [];
@@ -178,8 +173,8 @@ y=m.length;if(w>y&&m.unshift(0),r(_,m,w,u),w=_.length,-1==f)for(;n(D,_,F,w)<1;)d
         return this._connected;
     }
 
-    function connect(options) {
-        var web3 = new Web3(new EthersProvider(options));
+    function connect(testnet) {
+        var web3 = new Web3(new EthersProvider(testnet));
 
         // @TODO: We will need hijack eth.filter here
 
