@@ -61,7 +61,9 @@ Friends don't let friends call synchronously.
 License
 -------
 
-MIT License.
+The *ethers* library is released under the MIT License.
+
+The *web3* library is available under the LGPL-3.0 license. This should not affect you unless you modify the source of the embedded web3, in which case those (and only those) changes are swept into the LGPL-3.0 license.
 
 
 
