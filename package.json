@@ -1,0 +1,14 @@
+{
+  "name": "ethers-web3",
+  "version": "0.0.1",
+  "description": "",
+  "main": "ethers-web3.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+      "ethereumjs-tx": "1.1.1"
+  },
+  "author": "Richard Moore <me@ricmoo.com>",
+  "license": "MIT"
+}

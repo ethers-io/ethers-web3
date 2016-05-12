@@ -1,0 +1,104 @@
+<html>
+    <head>
+        <title>Test Deploy - etheres.io</title>
+    </head>
+    <body>
+        <script type="text/javascript" src="./node_modules/web3/dist/web3.js"></script>
+        <script type="text/javascript" src="./node_modules/ethereumjs-tx/dist/ethereumjs-tx.js"></script>
+        <script type="text/javascript" src="./ethers.js"></script>
+        <script type="text/javascript">
+            var web3 = ethers.connect({endpoints: ['ws://localhost:5000/v1/morden']});
+
+            // Some key for test...
+            var privateKey = new Buffer(32);
+            privateKey.fill(0x42);
+            privateKey[5] = 0x05;
+            var address = '0x' + ethUtil.privateToAddress(privateKey).toString('hex');
+
+            console.log('Address', address);
+
+            function getGasPricePromise() {
+                return new Promise(function(resolve, reject) {
+                    web3.eth.getGasPrice(function(error, gasPrice) {
+                        console.log('a', arguments)
+                        if (error) {
+                            return reject(error);
+                        }
+                        resolve(gasPrice);
+                    });
+                });
+            }
+
+            function getTransactionCountPromise(address) {
+                return new Promise(function(resolve, reject) {
+                    web3.eth.getTransactionCount(address, 'pending', function(error, transactionCount) {
+                        console.log('b', arguments)
+                        if (error) {
+                            return reject(error);
+                        }   
+                        resolve(transactionCount);
+                    });
+                });
+            }
+
+            function deploy(gasPrice, transactionCount) {
+                console.log(gasPrice, transactionCount);
+                console.log(gasPrice.toString(16));
+
+                var source = 'contract foo { }';
+                var contractName = 'foo';
+                var bytecode = '0x606060405260068060106000396000f3606060405200';
+                var runtimeBytecode = '0x60606040526008565b00';
+            
+                var transactionInfo = {
+                    nonce: transactionCount,
+                    gasPrice: '0x' + gasPrice.toString(16),
+                    gasLimit: 3000000,
+                    to: '',
+                    value: '0x00',
+                    data: bytecode,
+                };
+
+                web3.eth.estimateGas(transactionInfo, function(error, estimatedGas) {
+                    if (error) {
+                        console.log(error);
+                        return;
+                    }
+
+                    transactionInfo.gasLimit = estimatedGas;
+                    
+                    var transaction = new EthTx(transactionInfo);
+                    transaction.sign(privateKey);
+                    var signedTransaction = transaction.serialize().toString('hex');
+                    console.log(transaction, signedTransaction);
+                
+                    web3.ethers.deploySignedContract({
+                        source: source,
+                        compilerVersion: 'v0.3.1-2016-03-31-c67926c',
+                        optimize: true,
+                        contractName: contractName,
+                        signedTransaction: '0x' + signedTransaction
+                    }, function(error, result) {
+                        console.log(error, result);
+                    });
+                });
+            }
+
+            Promise.all([
+                getGasPricePromise(),
+                getTransactionCountPromise(address),
+            ]).then(function(result) {
+                var gasPrice = result[0];
+                var transactionCount = result[1];
+                deploy(gasPrice, transactionCount);
+            }, function (error) {
+                console.log(error);
+            });
+
+
+            
+            
+
+        </script>
+    </body>        
+</html>
