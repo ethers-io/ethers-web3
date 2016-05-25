@@ -1,0 +1,23 @@
+<html>
+    <body>
+        <script type="text/javascript" src="./node_modules/web3/dist/web3.js"></script>
+        <script type="text/javascript" src="./ethers.js"></script>
+        <script type="text/javascript">
+            //var web3 = ethers.connect({endpoints: ['ws://localhost:5000/v1/morden']});
+            //var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+
+            var web3 = ethers.connect({testnet: true});
+            
+            var filter;
+            function run() {
+                var count = 0;
+                filter = web3.eth.filter('latest', function(error, blockhash) {
+                    count++;
+                    if (count > 3) { filter.stopWatching(); }
+                    console.log(error, blockhash);
+                });
+            }
+            
+        </script>
+    </body>
+</html>

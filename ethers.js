@@ -87,7 +87,8 @@ var ethers = (function() {
         }
 
         // Connect to a random endpoint
-        this._ws = new WebSocket(this._endpoints[parseInt(Math.random() * this._endpoints.length)]);
+        this._endpoint = this._endpoints[parseInt(Math.random() * this._endpoints.length)]
+        this._ws = new WebSocket(this._endpoint);
 
         var self = this;
         this._ws.onopen = function() {
@@ -102,8 +103,8 @@ var ethers = (function() {
 
         this._ws.onmessage = function(message) {
             if (self._callbacks === null) {
-                console.log('draining messages; we are destroyed');
-                console.log(message);
+                //console.log('draining messages; we are destroyed');
+                //console.log(message);
                 return;
             }
             var payload = null;
@@ -305,12 +306,12 @@ var ethers = (function() {
     }
 
 
-    function Contract(source, bytecode, compilerVersion, optimize, contractName) {
+    function Contract(source, bytecode, compilerVersion, optimize, depoymentTarget) {
           this._source = source;
           this._bytecode = bytecode;
           this._compilerVersion = compilerVersion;
           this._optimize = optimize;
-          this._contractName = contractName;
+          this._deploymentTarget = depoymentTarget;
     }
 
 
@@ -323,14 +324,14 @@ var ethers = (function() {
     }
 
     // callback is optional
-    Ethers.prototype.faucet = function(address, callback) {
-        if (!callback) { callback = function() { }; }
-        // @TODO: Check valid address
-        return this._callEthers('ethers_faucet', [address], callback);
-    };
+    //Ethers.prototype.faucet = function(address, callback) {
+    //    if (!callback) { callback = function() { }; }
+    //    // @TODO: Check valid address
+    //    return this._callEthers('ethers_faucet', [address], callback);
+    //};
 
     // @TODO: Once we have accounts
-    //Ethers.prototype.deployContract = function(source, compilerVersion, optimize, contractName, account) {
+    //Ethers.prototype.deployContract = function(source, compilerVersion, optimize, deploymentTarget, account) {
     //};
     function populateContractInfo(contractInfo, callback) {
         if (!contractInfo || !contractInfo.source || !contractInfo.source.url) {
@@ -344,19 +345,21 @@ var ethers = (function() {
         ]).then(function(results) {
 
             // Check the content hasn't been tampered with
-            if (('0x' + sha3(results[0]).toString('hex')) !== contractInfo.source.hash) {
+            if ('0x' + sha3(results[0]) !== contractInfo.source.hash) {
                 callback(new Error('source hash mismatch'));
                 return;
             }
-            if (('0x' + sha3(results[1]).toString('hex')) !== contractInfo.interfaces.hash) {
+            if ('0x' + sha3(results[1]) !== contractInfo.interfaces.hash) {
                 callback(new Error('interface hash mismatch'));
                 return;
             }
 
             var info = {
-                address: address,
+                address: contractInfo.address,
                 bytecode: contractInfo.bytecode,
                 compilerVersion: contractInfo.compilerVersion,
+                deploymentTarget: contractInfo.deploymentTarget,
+                gistId: contractInfo.gistId,
                 interfaces: JSON.parse(results[1]),
                 optimized: contractInfo.optimized,
                 source: results[0],
@@ -379,14 +382,14 @@ var ethers = (function() {
             options.source,
             options.compilerVersion,
             options.optimize,
-            options.contractName,
+            options.deploymentTarget,
             options.signedTransaction
         ], function (error, contractInfo) {
             if (error) {
                 return callback(error);
             }
 
-            populateContractInfo(contractInfo, callback);
+            callback(null, contractInfo);
         });
     }
 
@@ -395,6 +398,7 @@ var ethers = (function() {
             if (error) {
                 return callback(error);
             }
+
             populateContractInfo(contractInfo, callback);
         });
     }

@@ -10,7 +10,7 @@ Features
 --------
 
 * Complete web3 object
-* No need to install your own *Ethereum* nodes
+* No need to install your own *Ethereum* nodes; we do that for you
 
 
 Intalling
@@ -19,17 +19,22 @@ Intalling
 To use on your own website, simply include the script:
 
 ```html
-<script type="text/javascript" src="https://ethers.io/static/ethers-web3-bc3788a20bb49f2b.js"></script>
+<script type="text/javascript" src="https://ethers.io/static/ethers-web3-019aab22c5fac0ab.js"></script>
 ```
 
 
 To Do
 -----
 
-* Automatically reconnect
-* Filters
+* Automatically reconnect option (will have to deal with filters in weird ways, so application support for reconnect may be required regardless)
 * Inject private keys and addresses into the `ethers` object as accounts
 * Re-write the parts of *web3* that *ethers-web3* requires to remove the LGPL tendrils
+
+
+Notes
+-----
+
+* Filter support is new and may have issues; please let us know if you find any problems and reproduction steps if possible
 
 
 API
@@ -46,6 +51,9 @@ The `ethers` object handles connecting to a *Ethereum* node for you, over an eff
 
     // Connect to your own ethers-server (example: morden)
     var web3 = ethers.connect({endpoints: ['ws://localhost:8001/v1/morden']});
+
+    // Connect with a normal/modified web3 installation
+    var web3 = new Web3(ethers.EthersProvider({testnet: true}));
 ```
 
 
